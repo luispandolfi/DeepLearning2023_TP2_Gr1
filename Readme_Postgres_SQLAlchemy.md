@@ -17,6 +17,8 @@ docker run -d --name sistemarecomendacion-postgres -e POSTGRES_USER=admin -e POS
 Reemplazar <repo_path> con el path en donde esta clonado este repositorio git.
 Ejemplo: "C:\private\deep_learning\DeepLearning2023_TP2_Gr1"
 
+Tambien puede ejecutarse estando en el path <repo_path> y reemplazando <repo_path> por .
+
 Nótese que se crea el usuario "admin" con password "Password01" en la base de datos.
 
 Se hacen dos mapeos importantes entre el docker y tu computadora:
@@ -39,3 +41,19 @@ https://www.sqlalchemy.org/
 
 Para comenzar:
 https://docs.sqlalchemy.org/en/20/orm/quickstart.html
+
+
+## Crear environment con Conda
+
+Pare ver los environments existentes:
+conda env list
+
+Vamos a crear el environment de nombre "tp2" y usar el archivo de requirements:
+
+conda create --name tp2 python=3.9
+conda activate tp2
+conda install --yes --file requirements.txt
+
+Para ver los packages instalados:
+conda list
+
