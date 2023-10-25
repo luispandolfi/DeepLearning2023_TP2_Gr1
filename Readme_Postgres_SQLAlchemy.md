@@ -64,3 +64,10 @@ pip install pandas
 ## Otros
 
 Mediante pgAdmin4 cree la base de datos sisrec
+
+## FastAPI
+
+https://fastapi.tiangolo.com/#installation
+
+pip install fastapi
+pip install "uvicorn[standard]"
