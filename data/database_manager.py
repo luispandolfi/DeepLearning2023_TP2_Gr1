@@ -7,6 +7,7 @@ from model.usuario import Usuario
 from model.trabajador import Trabajador
 from model.pelicula import Pelicula
 from model.score import Score
+from model.prediccion_score import PrediccionScore
 
 
 class DatabaseManager:
