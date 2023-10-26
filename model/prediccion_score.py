@@ -6,7 +6,7 @@ class PrediccionScore(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     id_usuario: Mapped[int]
     id_pelicula: Mapped[int]
-    puntuacion: Mapped[int]
+    puntuacion: Mapped[float]
 
 
     def __init__(self, id_usuario, id_pelicula, puntuacion, id=None):
