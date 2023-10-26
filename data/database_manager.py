@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select, func, delete
 from sqlalchemy.orm import Session
 from data.data_frame_loader import DataFrameLoader
 from model.base_model import BaseModel
@@ -8,7 +8,7 @@ from model.trabajador import Trabajador
 from model.pelicula import Pelicula
 from model.score import Score
 from model.prediccion_score import PrediccionScore
-from sqlalchemy import select
+from datetime import date
 
 
 class DatabaseManager:
@@ -108,14 +108,54 @@ class DatabaseManager:
             session.add(score)
     
 
+    # Devuelve para un usuario las k películas con mayor puntaje predicto, ordenadas por puntaje de mayor a menor.
+    # Éstas son películas que el usuario no ha vista, ya que se almacenan las predicciones únicamente para las películas no vistas.
     def get_top_k_peliculas_rankeadas(self, k, id_usuario):
-        session = Session(self.engine)
         stmt = select(Pelicula, PrediccionScore.puntuacion) \
             .where(PrediccionScore.id_usuario == id_usuario) \
             .where(Pelicula.id == PrediccionScore.id_pelicula) \
-            .order_by(PrediccionScore.puntuacion.desc()).limit(k)
-        
-        #TODO filtrar por las que no vio el usuario, puede ser una subquery para hacer pelicula.id not in <peliculas ya vistas>
-
+            .order_by(PrediccionScore.puntuacion.desc()).limit(k)        
         with Session(self.engine) as session:
             return session.execute(stmt).all()
+    
+
+    # Al puntuar una película la estamos marcando como ya vista.
+    # Este método:
+    # - agrega o actualiza el puntaje en Scores
+    # - elimina la predicción en PrediccionesScore
+    # En caso de error devuelve un mensaje correspondiente, sino devuelve None.
+    def puntuar_pelicula(self, id_usuario, id_pelicula, puntaje):
+        if puntaje < 1 or puntaje > 5:
+            return "El puntaje debe estar entre 1 y 5"
+        
+        try:
+            with Session(self.engine) as session:
+                # agrego/actualizo Scores
+                score = self.__get_score(session, id_usuario, id_pelicula)
+                if score == None:
+                    # el score no existe, entonces lo inserto
+                    maxId = session.scalar(select(func.max(Score.id))) #TODO evitar mediante un autogenerado en la base de datos
+                    fecha_hoy = date.today().strftime("%Y-%m-%d") #TODO habria que cambiar para recibir un objeto fecha
+                    score = Score(id_usuario, id_pelicula, puntaje, fecha_hoy, id=maxId+1)
+                else:
+                    # el score ya existe, entonces le actualizo el puntaje
+                    score.puntuacion = puntaje
+                session.add(score)
+
+                # elimino de PrediccionesScore
+                session.execute(delete(PrediccionScore) \
+                                .where(PrediccionScore.id_usuario == id_usuario) \
+                                .where(PrediccionScore.id_pelicula == id_pelicula))
+                
+                # commit de cambios
+                session.commit()
+                return None
+        except:
+            return "Ha ocurrido un error."
+    
+
+    def __get_score(self, session: Session, id_usuario, id_pelicula):
+        return session.scalar(
+            select(Score) \
+            .where(Score.id_usuario == id_usuario) \
+            .where(Score.id_pelicula == id_pelicula))
