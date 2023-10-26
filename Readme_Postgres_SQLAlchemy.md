@@ -64,3 +64,13 @@ Mediante pgAdmin4 cree la base de datos sisrec
 ## FastAPI
 
 https://fastapi.tiangolo.com/
+
+### Cómo ejecutar los servicios?
+
+En la consola ejecutar el comando:
+```
+uvicorn main.app --reload
+```
+
+En un browser abir la url:
+http://127.0.0.1:8000/docs
