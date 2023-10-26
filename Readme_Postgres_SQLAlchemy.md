@@ -57,10 +57,6 @@ conda install --yes --file requirements.txt
 Para ver los packages instalados:
 conda list
 
-Además ejecute:
-pip install psycopg2-binary
-pip install pandas
-
 ## Otros
 
 Mediante pgAdmin4 cree la base de datos sisrec
@@ -68,6 +64,3 @@ Mediante pgAdmin4 cree la base de datos sisrec
 ## FastAPI
 
 https://fastapi.tiangolo.com/
-
-pip install fastapi
-pip install "uvicorn[standard]"
