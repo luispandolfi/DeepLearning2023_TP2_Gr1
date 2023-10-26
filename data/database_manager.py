@@ -110,15 +110,9 @@ class DatabaseManager:
 
     def get_top_k_peliculas_rankeadas(self, k, id_usuario):
         session = Session(self.engine)
-        '''
         stmt = select(Pelicula, PrediccionScore.puntuacion) \
             .where(PrediccionScore.id_usuario == id_usuario) \
             .where(Pelicula.id == PrediccionScore.id_pelicula) \
-            .order_by(PrediccionScore.puntuacion.desc()).limit(k)
-        '''
-        stmt = select(Pelicula, PrediccionScore.puntuacion)\
-            .where(PrediccionScore.id_usuario == id_usuario)\
-            .where(Pelicula.id == PrediccionScore.id_pelicula)\
             .order_by(PrediccionScore.puntuacion.desc()).limit(k)
         
         #TODO filtrar por las que no vio el usuario, puede ser una subquery para hacer pelicula.id not in <peliculas ya vistas>
