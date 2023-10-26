@@ -67,7 +67,7 @@ Mediante pgAdmin4 cree la base de datos sisrec
 
 ## FastAPI
 
-https://fastapi.tiangolo.com/#installation
+https://fastapi.tiangolo.com/
 
 pip install fastapi
 pip install "uvicorn[standard]"
