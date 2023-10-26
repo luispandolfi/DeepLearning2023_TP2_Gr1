@@ -22,14 +22,13 @@ class DatabaseManager:
 
     def load_initial_data(self):
         dfs = DataFrameLoader.load_all("csv_files/personas.csv","csv_files/trabajadores.csv","csv_files/usuarios.csv","csv_files/peliculas.csv","csv_files/scores.csv")
-        session = Session(self.engine)
-        self.load_personas(dfs[0], session)
-        self.load_trabajadores(dfs[1], session)
-        self.load_usuarios(dfs[2], session)
-        self.load_peliculas(dfs[3], session)
-        self.load_scores(dfs[4], session)
-        session.commit()
-        session.close()
+        with Session(self.engine) as session:
+            self.load_personas(dfs[0], session)
+            self.load_trabajadores(dfs[1], session)
+            self.load_usuarios(dfs[2], session)
+            self.load_peliculas(dfs[3], session)
+            self.load_scores(dfs[4], session)
+            session.commit()
 
 
     def load_personas(self, df, session):
