@@ -1,6 +1,6 @@
 from typing import Union
 from fastapi import FastAPI
-from services.recommender import Recommender
+from services.recommender_service import Recommender
 
 app = FastAPI()
 
