@@ -12,12 +12,12 @@ class Recommender:
     
 
     def __init__(self):
-        self.databaseManager = DatabaseManager("postgresql://admin:Password01@127.0.0.1/sisrec")
+        self.database_manager = DatabaseManager("postgresql://admin:Password01@127.0.0.1/sisrec")
     
     
     # Devuelve las k mejores recomendaciones de películas para el usuario dado.
     def recomendar_peliculas(self, id_usuario: int, k_peliculas: int):
-        recomendadas = self.databaseManager.get_top_k_peliculas_rankeadas(k_peliculas, id_usuario)
+        recomendadas = self.database_manager.get_top_k_peliculas_rankeadas(k_peliculas, id_usuario)
         resultado = []
         for pelicula, puntaje in recomendadas:
             recomendada = {}
@@ -38,7 +38,7 @@ class Recommender:
 
     # Para un usuario puntua una película, de esta forma se indica que el usuario vió la película.
     def puntuar_pelicula(self, id_usuario: int, id_pelicula: int, puntaje: int):
-        error_message = self.databaseManager.puntuar_pelicula(id_usuario, id_pelicula, puntaje)
+        error_message = self.database_manager.puntuar_pelicula(id_usuario, id_pelicula, puntaje)
         if error_message == None:
             return {"success": True}
         else:
