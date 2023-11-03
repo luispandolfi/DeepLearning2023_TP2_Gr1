@@ -16,8 +16,7 @@ docker pull opensearchproject/opensearch
 
 Ejecutar el docker:
 ```bash
-cd vector_db
-docker run -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -d -v C:\Users\josez\OneDrive\Documentos\ITBA-DeepLearning\TP2\DeepLearning2023_TP2_Gr1\vector_db\db_data:/usr/share/opensearch/data opensearchproject/opensearch:latest
+docker run -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -d -v .\databases\opensearch\data:/usr/share/opensearch/data opensearchproject/opensearch:latest
 ```
 
 ## Docker de Postgres
