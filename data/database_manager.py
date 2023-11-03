@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, inspect, select, func, delete
 from sqlalchemy.orm import Session
-from data.data_frame_loader import DataFrameLoader
 from model.base_model import BaseModel
 from model.persona import Persona
 from model.usuario import Usuario
@@ -32,14 +31,13 @@ class DatabaseManager:
         BaseModel.metadata.create_all(self.engine)
 
 
-    def load_initial_data(self):
-        dfs = DataFrameLoader.load_all("csv_files/personas.csv","csv_files/trabajadores.csv","csv_files/usuarios.csv","csv_files/peliculas.csv","csv_files/scores.csv")
+    def load_initial_data(self, df_personas, df_trabajadores, df_usuarios, df_peliculas, df_scores):
         with Session(self.engine) as session:
-            self.load_personas(dfs[0], session)
-            self.load_trabajadores(dfs[1], session)
-            self.load_usuarios(dfs[2], session)
-            self.load_peliculas(dfs[3], session)
-            self.load_scores(dfs[4], session)
+            self.load_personas(df_personas, session)
+            self.load_trabajadores(df_trabajadores, session)
+            self.load_usuarios(df_usuarios, session)
+            self.load_peliculas(df_peliculas, session)
+            self.load_scores(df_scores, session)
             session.commit()
 
 
