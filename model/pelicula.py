@@ -30,6 +30,10 @@ class Pelicula(BaseModel):
     genero_western: Mapped[bool]
 
 
+    GENRES = ['Action', 'Adventure', 'Animation', "Children's", 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy',
+            'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
+
+
     def __init__(self, nombre, fecha_estreno, url, genero_unknown = False, genero_action = False, genero_adventure = False,
                  genero_animation=False, genero_children=False, genero_comedy=False, genero_crime=False,
                  genero_documentary=False, genero_drama=False, genero_fantasy=False, genero_film_noir=False,
