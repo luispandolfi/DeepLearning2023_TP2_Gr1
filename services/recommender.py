@@ -1,4 +1,5 @@
 from data.database_manager import DatabaseManager
+from data.datavector_manager import DatavectorManager  
 
 class Recommender:
 
@@ -13,7 +14,7 @@ class Recommender:
 
     def __init__(self):
         self.databaseManager = DatabaseManager("postgresql://admin:Password01@127.0.0.1/sisrec")
-    
+        self.datavectorManager = DatavectorManager("localhost", 9200, "admin" , "admin")
     
     # Devuelve las k mejores recomendaciones de películas para el usuario dado.
     def recomendar_peliculas(self, id_usuario: int, k_peliculas: int):
@@ -32,8 +33,9 @@ class Recommender:
 
     # Devuelve las k películas más similares a la película dada.
     def peliculas_similares(self, id_pelicula: int, k_peliculas: int):
-        #TODO hacerlo con knn llamando a la clase encargada de ello
-        return {"id_pelicula": id_pelicula, "K": k_peliculas}
+        recomendadas = self.datavectorManager.listIndiceByName(id_pelicula, k_peliculas)
+        #return { "success": False, "errorMessage": 33}
+        return recomendadas
     
 
     # Para un usuario puntua una película, de esta forma se indica que el usuario vió la película.
