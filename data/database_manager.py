@@ -14,6 +14,7 @@ from datetime import date
 class DatabaseManager:
 
     def __init__(self, connectionString):
+        self.engine = create_engine(connectionString) #agregar echo=True param para debug
 
 
     def drop_tables(self):
