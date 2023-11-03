@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, select, func, delete
+from sqlalchemy import create_engine, inspect, select, func, delete
 from sqlalchemy.orm import Session
 from data.data_frame_loader import DataFrameLoader
 from model.base_model import BaseModel
@@ -14,10 +14,19 @@ from datetime import date
 class DatabaseManager:
 
     def __init__(self, connectionString):
-        self.engine = create_engine(connectionString)
 
 
-    def create_database(self):
+    def drop_tables(self):
+        for table in BaseModel.metadata.sorted_tables:
+            self.__drop_table(table)
+    
+
+    def __drop_table(self, table):
+        if inspect(self.engine).has_table(table.name):
+            table.drop(self.engine)
+
+
+    def create_tables(self):
         BaseModel.metadata.create_all(self.engine)
 
 
