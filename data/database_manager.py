@@ -9,6 +9,7 @@ from model.pelicula import Pelicula
 from model.score import Score
 from model.prediccion_score import PrediccionScore
 from datetime import date
+from services.recommender_model import RecommenderModel
 
 
 class DatabaseManager:
@@ -169,3 +170,41 @@ class DatabaseManager:
             select(Score) \
             .where(Score.id_usuario == id_usuario) \
             .where(Score.id_pelicula == id_pelicula))
+    
+
+    def load_predicted_scores(self):
+        model = RecommenderModel('vectors/model.keras', 'vectors/user2Idx.npy', 'vectors/movie2Idx.npy')
+        with Session(self.engine) as session:
+            # elimina predicciones anteriores
+            session.execute(delete(PrediccionScore))
+            # para todos los usuarios
+            for user in session.execute(select(Usuario)):
+                user_id = user[0].id
+                print(f'Prediciendo para usuario : {user_id} ...')
+                user_batch = []
+                movie_batch = []
+                genres_batch = []
+                # consulta las peliculas que el usario aun no ha visto (no ha puntuado)
+                not_seen_movies = select(Pelicula).where(Pelicula.id.not_in(
+                    select(Score.id_pelicula).where(Score.id_usuario == user_id)
+                ))
+                for movie in session.execute(not_seen_movies):
+                    movie_id = movie[0].id
+                    movie_genres = movie[0].get_genres()    
+                    # agrega el usuario y pelicula al batch
+                    user_batch = user_batch + [user_id]
+                    movie_batch = movie_batch + [movie_id]
+                    genres_batch = genres_batch + [movie_genres]
+                # predice y actualiza el batch
+                self.__predict_and_update_score(session, model, user_batch, movie_batch, genres_batch)
+            # confirma cambios
+            session.commit()
+    
+
+    def __predict_and_update_score(self, session, model, users, movies, movies_genres):
+        model_result = model.batch_predict_score(users, movies, movies_genres)
+        for i, user_id in enumerate(users):
+            movie_id = movies[i]
+            score = float(model_result[i][0])
+            predicted_score = PrediccionScore(user_id, movie_id, score)
+            session.add(predicted_score)

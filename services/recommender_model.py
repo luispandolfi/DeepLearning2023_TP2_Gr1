@@ -9,19 +9,19 @@ class RecommenderModel:
         self.movie2Idx = np.load(movie2idx_file_path, allow_pickle=True).item()
     
 
-    # user_id: int
-    # movie_id: int
-    # movie_genre_list: list of int / length 18
-    def predict_score(self, user_id, movie_id, movie_genre_list):
+    # users: list of in
+    # movies: list of int
+    # movie_genres: list of genres - genres is a 18 items list (an item is a 0 or 1)
+    def batch_predict_score(self, users, movies, movie_genres):
 
         # map the ids to the indexes used in the model
-        userIdx = self.user2Idx[user_id]
-        movieIdx = self.movie2Idx[movie_id]
+        userIdx = [self.user2Idx[x] for x in users]
+        movieIdx = [self.movie2Idx[x] for x in movies]
 
         # build the input values
-        user_input = np.array([userIdx])
-        movie_input = np.array([movieIdx])
-        genre_input = np.array([movie_genre_list])
+        user_input = np.array(userIdx)
+        movie_input = np.array(movieIdx)
+        movie_genres_input = np.array(movie_genres)
 
         # predict
-        return self.model.predict([user_input, movie_input, genre_input])
+        return self.model.predict([user_input, movie_input, movie_genres_input])

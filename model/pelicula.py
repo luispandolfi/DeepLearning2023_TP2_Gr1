@@ -62,3 +62,25 @@ class Pelicula(BaseModel):
         self.genero_war = genero_war
         self.genero_western = genero_western
         self.id = id
+
+        
+    #unknown no se retorna en la lista, no se uso para entrenar el model
+    def get_genres(self):
+        return [int(self.genero_action),
+                int(self.genero_adventure),
+                int(self.genero_animation),
+                int(self.genero_children),
+                int(self.genero_comedy),
+                int(self.genero_crime),
+                int(self.genero_documentary),
+                int(self.genero_drama),
+                int(self.genero_fantasy),
+                int(self.genero_film_noir),
+                int(self.genero_horror),
+                int(self.genero_musical),
+                int(self.genero_mystery),
+                int(self.genero_romance),
+                int(self.genero_sci_fi),
+                int(self.genero_thriller),
+                int(self.genero_war),
+                int(self.genero_western)]
