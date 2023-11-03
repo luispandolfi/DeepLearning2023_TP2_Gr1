@@ -28,6 +28,7 @@ class Recommender:
             recomendada['fecha_estreno'] = pelicula.fecha_estreno
             recomendada['url'] = pelicula.url
             recomendada['puntaje'] = puntaje
+            recomendada['generos'] = pelicula.get_genres_as_string_list()
             resultado.append(recomendada)
         return resultado
     

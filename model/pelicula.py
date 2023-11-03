@@ -63,7 +63,7 @@ class Pelicula(BaseModel):
         self.genero_western = genero_western
         self.id = id
 
-        
+
     #unknown no se retorna en la lista, no se uso para entrenar el model
     def get_genres(self):
         return [int(self.genero_action),
@@ -84,3 +84,12 @@ class Pelicula(BaseModel):
                 int(self.genero_thriller),
                 int(self.genero_war),
                 int(self.genero_western)]
+
+
+    def get_genres_as_string_list(self):
+        genres_names = []
+        genres = self.get_genres()
+        for i, genre in enumerate(genres):
+            if genre == 1:
+                genres_names = genres_names + [Pelicula.GENRES[i]]
+        return genres_names
