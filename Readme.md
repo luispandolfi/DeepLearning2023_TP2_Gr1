@@ -82,7 +82,7 @@ https://fastapi.tiangolo.com/
 
 En la consola ejecutar el comando:
 ```
-uvicorn main.app --reload
+uvicorn main:app --reload
 ```
 
 En un browser abir la url:
